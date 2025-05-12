@@ -7,7 +7,9 @@ public class Gravity : MonoBehaviour
 {
     private Rigidbody2D rgbd2d;
     [SerializeField] float velocity = 5f;
+    private Quaternion targetRotation;
     private bool lateralGravity=false;
+    private float rotationSpeed = 500f;
     void Start()
     {
         rgbd2d=GetComponent<Rigidbody2D>();
@@ -19,53 +21,58 @@ public class Gravity : MonoBehaviour
         {
             Physics2D.gravity = new Vector2(0, -9.81f); 
             lateralGravity =false;
-            transform.rotation = Quaternion.Euler(0, 0, 0);  // Rotación de 90 grados sobre el eje Z
+            targetRotation = Quaternion.Euler(0, 0, 0);  
+
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
             Physics2D.gravity = new Vector2(0, 9.81f);
             lateralGravity = false;
-            transform.rotation = Quaternion.Euler(0, 0, 0);  // Rotación de 90 grados sobre el eje Z
+            targetRotation = Quaternion.Euler(0, 0, 180);  
+
 
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
             Physics2D.gravity = new Vector2(-9.81f, 0);
             lateralGravity = true;
-            transform.rotation = Quaternion.Euler(0, 0, 90);  // Rotación de 90 grados sobre el eje Z
+            targetRotation = Quaternion.Euler(0, 0, -90);  
+
 
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             Physics2D.gravity = new Vector2(9.81f, 0);
             lateralGravity = true;
-            transform.rotation = Quaternion.Euler(0, 0, 90);  // Rotación de 90 grados sobre el eje Z
+            targetRotation = Quaternion.Euler(0, 0, 90);  
+
 
         }
         if (lateralGravity)
         {
-            // Movimiento cuando lateralGravity es verdadero (vertical)
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, -velocity); // Movimiento hacia abajo
+                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, -velocity); 
             }
             else if (Input.GetKey(KeyCode.UpArrow))
             {
-                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, velocity); // Movimiento hacia arriba
+                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, velocity); 
             }
         }
         else
         {
-            // Movimiento cuando lateralGravity es falso (horizontal)
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                rgbd2d.velocity = new Vector2(-velocity, rgbd2d.velocity.y); // Movimiento hacia la izquierda
+                rgbd2d.velocity = new Vector2(-velocity, rgbd2d.velocity.y); 
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                rgbd2d.velocity = new Vector2(velocity, rgbd2d.velocity.y); // Movimiento hacia la derecha
+                rgbd2d.velocity = new Vector2(velocity, rgbd2d.velocity.y); 
             }
         }
-
+        if (transform.rotation != targetRotation)
+        {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 }
