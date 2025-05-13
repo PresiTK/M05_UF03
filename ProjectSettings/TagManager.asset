@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Colision
+  - Dead
+  - Tutorial
   layers:
   - Default
   - TransparentFX

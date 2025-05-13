@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class Gravity : MonoBehaviour
+public class CharacterControl : MonoBehaviour
 {
     private Rigidbody2D rgbd2d;
     [SerializeField] float velocity = 5f;
@@ -20,6 +21,8 @@ public class Gravity : MonoBehaviour
         rgbd2d=GetComponent<Rigidbody2D>();
         playerAnimator=GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        Physics2D.gravity = new Vector2(0, -9.81f);
+
     }
 
     void Update()
@@ -57,82 +60,86 @@ public class Gravity : MonoBehaviour
             rotatioNeeded = false;
 
         }
-        if (lateralGravity)
+        if (!fly)
         {
-            if (Input.GetKey(KeyCode.DownArrow))
+
+            if (lateralGravity)
             {
-                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, -velocity);
-                if (!fly)
+                if (Input.GetKey(KeyCode.DownArrow))
                 {
-                    moving = true;
+                    rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, -velocity);
+                    if (!fly)
+                    {
+                        moving = true;
+                    }
+                    if (rotatioNeeded)
+                    {
+                        spriteRenderer.flipX = false;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = true;
+                    }
                 }
-                if (rotatioNeeded)
+                else if (Input.GetKey(KeyCode.UpArrow))
                 {
-                    spriteRenderer.flipX = false;
+                    rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, velocity);
+                    if (!fly)
+                    {
+                        moving = true;
+                    }
+                    if (rotatioNeeded)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
                 }
                 else
                 {
-                    spriteRenderer.flipX = true;
-                }
-            }
-            else if (Input.GetKey(KeyCode.UpArrow))
-            {
-                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, velocity);
-                if (!fly)
-                {
-                    moving = true;
-                }
-                if (rotatioNeeded)
-                {
-                    spriteRenderer.flipX = true;
-                }
-                else
-                {
-                    spriteRenderer.flipX = false;
+                    moving = false;
                 }
             }
             else
             {
-                moving=false;
-            }
-        }
-        else
-        {
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                rgbd2d.velocity = new Vector2(-velocity, rgbd2d.velocity.y);
-                if (!fly)
+                if (Input.GetKey(KeyCode.LeftArrow))
                 {
-                    moving = true;
+                    rgbd2d.velocity = new Vector2(-velocity, rgbd2d.velocity.y);
+                    if (!fly)
+                    {
+                        moving = true;
+                    }
+                    if (rotatioNeeded)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
                 }
-                if (rotatioNeeded)
+                else if (Input.GetKey(KeyCode.RightArrow))
                 {
-                    spriteRenderer.flipX = true;
+                    rgbd2d.velocity = new Vector2(velocity, rgbd2d.velocity.y);
+                    if (!fly)
+                    {
+                        moving = true;
+                    }
+                    if (rotatioNeeded)
+                    {
+                        spriteRenderer.flipX = false;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = true;
+                    }
                 }
                 else
                 {
-                    spriteRenderer.flipX = false;
+                    moving = false;
                 }
-            }
-            else if (Input.GetKey(KeyCode.RightArrow))
-            {
-                rgbd2d.velocity = new Vector2(velocity, rgbd2d.velocity.y);
-                if (!fly)
-                {
-                    moving = true;
-                }
-                if (rotatioNeeded)
-                {
-                    spriteRenderer.flipX = false;
-                }
-                else
-                {
-                    spriteRenderer.flipX = true;
-                }
-            }
-            else
-            {
-                moving=false;
             }
         }
         if (transform.rotation != targetRotation)
@@ -163,6 +170,11 @@ public class Gravity : MonoBehaviour
         {
             fly = true;
             playerAnimator.SetTrigger("Air");
+        }
+        if (collision.gameObject.CompareTag("MainCamera"))
+        {
+            SceneManager.LoadScene("SampleScene");
+            Debug.Log("Scene loaded");
         }
     }
 
