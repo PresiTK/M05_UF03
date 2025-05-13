@@ -10,18 +10,27 @@ public class Gravity : MonoBehaviour
     private Quaternion targetRotation;
     private bool lateralGravity=false;
     private float rotationSpeed = 500f;
+    private Animator playerAnimator;
+    private SpriteRenderer spriteRenderer;
+    private bool moving=false;
+    private bool fly;
+    private bool rotatioNeeded = true;
     void Start()
     {
         rgbd2d=GetComponent<Rigidbody2D>();
+        playerAnimator=GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.S))
         {
             Physics2D.gravity = new Vector2(0, -9.81f); 
             lateralGravity =false;
-            targetRotation = Quaternion.Euler(0, 0, 0);  
+            targetRotation = Quaternion.Euler(0, 0, 0);
+            rotatioNeeded = true;
 
         }
         else if (Input.GetKeyDown(KeyCode.W))
@@ -29,7 +38,7 @@ public class Gravity : MonoBehaviour
             Physics2D.gravity = new Vector2(0, 9.81f);
             lateralGravity = false;
             targetRotation = Quaternion.Euler(0, 0, 180);  
-
+            rotatioNeeded=false;
 
         }
         else if (Input.GetKeyDown(KeyCode.A))
@@ -37,42 +46,124 @@ public class Gravity : MonoBehaviour
             Physics2D.gravity = new Vector2(-9.81f, 0);
             lateralGravity = true;
             targetRotation = Quaternion.Euler(0, 0, -90);  
-
+            rotatioNeeded=true;
 
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             Physics2D.gravity = new Vector2(9.81f, 0);
             lateralGravity = true;
-            targetRotation = Quaternion.Euler(0, 0, 90);  
-
+            targetRotation = Quaternion.Euler(0, 0, 90);
+            rotatioNeeded = false;
 
         }
         if (lateralGravity)
         {
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, -velocity); 
+                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, -velocity);
+                if (!fly)
+                {
+                    moving = true;
+                }
+                if (rotatioNeeded)
+                {
+                    spriteRenderer.flipX = false;
+                }
+                else
+                {
+                    spriteRenderer.flipX = true;
+                }
             }
             else if (Input.GetKey(KeyCode.UpArrow))
             {
-                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, velocity); 
+                rgbd2d.velocity = new Vector2(rgbd2d.velocity.x, velocity);
+                if (!fly)
+                {
+                    moving = true;
+                }
+                if (rotatioNeeded)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    spriteRenderer.flipX = false;
+                }
+            }
+            else
+            {
+                moving=false;
             }
         }
         else
         {
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                rgbd2d.velocity = new Vector2(-velocity, rgbd2d.velocity.y); 
+                rgbd2d.velocity = new Vector2(-velocity, rgbd2d.velocity.y);
+                if (!fly)
+                {
+                    moving = true;
+                }
+                if (rotatioNeeded)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    spriteRenderer.flipX = false;
+                }
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                rgbd2d.velocity = new Vector2(velocity, rgbd2d.velocity.y); 
+                rgbd2d.velocity = new Vector2(velocity, rgbd2d.velocity.y);
+                if (!fly)
+                {
+                    moving = true;
+                }
+                if (rotatioNeeded)
+                {
+                    spriteRenderer.flipX = false;
+                }
+                else
+                {
+                    spriteRenderer.flipX = true;
+                }
+            }
+            else
+            {
+                moving=false;
             }
         }
         if (transform.rotation != targetRotation)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
+        if (moving)
+        {
+            playerAnimator.SetTrigger("Run");
+        }
     }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "Colision")
+        {
+            fly = false;
+            Debug.Log("hola");
+            if (!moving)
+            {
+                playerAnimator.SetTrigger("Idle");
+            }
+        }
+
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Colision")
+        {
+            fly = true;
+            playerAnimator.SetTrigger("Air");
+        }
+    }
+
 }
