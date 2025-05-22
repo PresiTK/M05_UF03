@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 4e3fa1e3fa81e2249ac2a8a123845f37
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Jaro
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 1a1651c79d6b76241974550a729d7f2b, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
