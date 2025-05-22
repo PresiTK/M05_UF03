@@ -10,7 +10,6 @@ public class CharacterControl : MonoBehaviour
     private Rigidbody2D rgbd2d;
     [SerializeField] float velocity = 5f;
     private Quaternion targetRotation;
-    private Quaternion cameratargetRotation;
 
     private bool lateralGravity=false;
     private float rotationSpeed = 500f;
@@ -37,7 +36,6 @@ public class CharacterControl : MonoBehaviour
             Physics2D.gravity = new Vector2(0, -9.81f); 
             lateralGravity =false;
             targetRotation = Quaternion.Euler(0, 0, 0);
-            cameratargetRotation = Quaternion.Euler(0, 0, 0);
             rotatioNeeded = true;
 
         }
@@ -46,7 +44,6 @@ public class CharacterControl : MonoBehaviour
             Physics2D.gravity = new Vector2(0, 9.81f);
             lateralGravity = false;
             targetRotation = Quaternion.Euler(0, 0, 180);
-            cameratargetRotation = Quaternion.Euler(0, 0, 0);
             rotatioNeeded =false;
 
         }
@@ -55,7 +52,6 @@ public class CharacterControl : MonoBehaviour
             Physics2D.gravity = new Vector2(-9.81f, 0);
             lateralGravity = true;
             targetRotation = Quaternion.Euler(0, 0, -90);
-            cameratargetRotation = Quaternion.Euler(0, 0, 90);
 
             rotatioNeeded = true;
 
@@ -65,7 +61,6 @@ public class CharacterControl : MonoBehaviour
             Physics2D.gravity = new Vector2(9.81f, 0);
             lateralGravity = true;
             targetRotation = Quaternion.Euler(0, 0, 90);
-            cameratargetRotation = Quaternion.Euler(0, 0, 90);
 
             rotatioNeeded = false;
 
@@ -155,7 +150,6 @@ public class CharacterControl : MonoBehaviour
         if (transform.rotation != targetRotation)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            camera.transform.rotation = Quaternion.RotateTowards(transform.rotation, cameratargetRotation, camerarotationSpeed * Time.deltaTime);
 
         }
         if (moving)
