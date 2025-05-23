@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class CharacterControl : MonoBehaviour
 {
     public GameObject camera;
-    private Rigidbody2D rgbd2d;
+    public Rigidbody2D rgbd2d;
     [SerializeField] float velocity = 5f;
     private Quaternion targetRotation;
 
@@ -182,6 +182,16 @@ public class CharacterControl : MonoBehaviour
             SceneManager.LoadScene("SampleScene");
             Debug.Log("Scene loaded");
         }
+    }
+    public void ResetCharacter(Vector3 respawnPosition)
+    {
+        transform.position = respawnPosition;
+        rgbd2d.velocity = Vector2.zero;
+        Physics2D.gravity = new Vector2(0, -9.81f);
+        targetRotation = Quaternion.Euler(0, 0, 0);
+        transform.rotation = targetRotation;
+        lateralGravity = false;
+        rotatioNeeded = true;
     }
 
 }
