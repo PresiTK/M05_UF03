@@ -1621,7 +1621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RespawnPosition: {x: 0, y: 0, z: 0}
   player: {fileID: 771399368}
-  gestordevidas: {fileID: 0}
+  gestordevidas: {fileID: 569469153}
 --- !u!212 &1220901943
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1739,7 +1739,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -48685,7 +48685,7 @@ TilemapCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
