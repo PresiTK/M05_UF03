@@ -111,6 +111,8 @@ public class CharacterControl : MonoBehaviour
             {
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
+                    playerAnimator.SetTrigger("Run");
+
                     rgbd2d.velocity = new Vector2(-velocity, rgbd2d.velocity.y);
                     if (!fly)
                     {
@@ -127,6 +129,7 @@ public class CharacterControl : MonoBehaviour
                 }
                 else if (Input.GetKey(KeyCode.RightArrow))
                 {
+
                     rgbd2d.velocity = new Vector2(velocity, rgbd2d.velocity.y);
                     if (!fly)
                     {
@@ -143,6 +146,8 @@ public class CharacterControl : MonoBehaviour
                 }
                 else
                 {
+                    playerAnimator.SetTrigger("Idle");
+
                     moving = false;
                 }
             }
@@ -157,19 +162,19 @@ public class CharacterControl : MonoBehaviour
             playerAnimator.SetTrigger("Run");
         }
     }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.tag == "Colision")
-        {
-            fly = false;
-            Debug.Log("hola");
-            if (!moving)
-            {
-                playerAnimator.SetTrigger("Idle");
-            }
-        }
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    if (collision.tag == "Colision")
+    //    {
+    //        fly = false;
+    //        Debug.Log("hola");
+    //        if (!moving)
+    //        {
+    //            playerAnimator.SetTrigger("Idle");
+    //        }
+    //    }
 
-    }
+    //}
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Colision")
