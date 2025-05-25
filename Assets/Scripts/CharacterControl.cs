@@ -11,13 +11,19 @@ public class CharacterControl : MonoBehaviour
     [SerializeField] float velocity = 5f;
     private Quaternion targetRotation;
 
+    [SerializeField] private Transform groundCheckPoint; // Asignar desde el inspector, por ejemplo un Empty en los pies
+    [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private LayerMask groundLayer; // Asigna la capa de suelo desde el Inspector
+    private bool isGrounded;
+
+    public Vector3 RespawnPosition;
     private bool lateralGravity=false;
     private float rotationSpeed = 500f;
     private float camerarotationSpeed = 10f;
     private Animator playerAnimator;
     private SpriteRenderer spriteRenderer;
     private bool moving=false;
-    private bool fly;
+    private bool fly=false;
     private bool rotatioNeeded = true;
     void Start()
     {
@@ -157,37 +163,37 @@ public class CharacterControl : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
         }
+        Vector2 origin = (Vector2)transform.position + Vector2.down * 0.55f; // ajusta si es necesario
+        float checkDistance = 0.4f; // aumenta si el personaje flota un poco
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, checkDistance);
+        Debug.DrawRay(origin, Vector2.down * checkDistance, hit.collider ? Color.green : Color.red);
+
+        if (hit.collider != null)
+        {
+            fly = false;
+            Debug.Log("Tocando algo: " + hit.collider.name);
+        }
+        else
+        {
+            fly = true;
+            Debug.Log("NO tocando nada");
+        }
         if (moving)
         {
             playerAnimator.SetTrigger("Run");
         }
-    }
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    if (collision.tag == "Colision")
-    //    {
-    //        fly = false;
-    //        Debug.Log("hola");
-    //        if (!moving)
-    //        {
-    //            playerAnimator.SetTrigger("Idle");
-    //        }
-    //    }
-
-    //}
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.tag == "Colision")
+        else if (!moving && !fly)
         {
-            fly = true;
+            playerAnimator.SetTrigger("Idle");
+        }
+        else if (fly)
+        {
             playerAnimator.SetTrigger("Air");
         }
-        if (collision.gameObject.CompareTag("MainCamera"))
-        {
-            SceneManager.LoadScene("SampleScene");
-            Debug.Log("Scene loaded");
-        }
+
     }
+
     public void ResetCharacter(Vector3 respawnPosition)
     {
         transform.position = respawnPosition;
